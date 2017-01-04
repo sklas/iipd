@@ -1,0 +1,158 @@
+<% provide(:title, @protein.protein_accession) %>
+<%= content_for :head do %>
+<% end %>
+
+<div class="row">
+    <div class="col-md-3 col-md-offset-1">
+        <%= link_to("< Page back", :back, data: {no_turbolink: true}) %>
+    </div>
+</div>
+<div class="row top-buffer">
+    <div class="col-md-2 col-md-offset-1">
+        <b>Protein id</b>
+    </div>
+    
+    <div class="col-md-3">
+        <%= @protein.protein_accession %>
+    </div>
+    
+    <div class="col-md-2">
+        <b>Species</b>
+    </div>
+    
+    <div class="col-md-3">
+        <%= link_to @protein.taxon.taxon_name, taxon_path(@protein.taxon.id), data: {no_turbolink: true} %>
+    </div>
+</div>
+
+<div class="row top-buffer">
+    <div class="col-md-2 col-md-offset-1">
+        <b>Name</b>
+    </div>
+
+    <div class="col-md-3">
+        <%= @protein.name %>
+    </div>
+
+    <div class="col-md-2">
+            <b>Source</b>
+    </div>
+
+    <div class="col-md-3">
+        <% unless @protein.evidence_id.nil? %>
+            <%= @protein.evidence.name %>
+        <% else %>
+            No Source in the database
+        <% end %>
+
+
+    </div>
+</div>
+
+<div class="row top-buffer">
+    <div class="col-md-2 col-md-offset-1">
+        <b>Family</b>
+    </div>
+
+    <div class="col-md-3">
+        <% unless @protein.family_id.nil? %>
+            <%= @protein.family.name %>
+        <% else %>
+            No family in the database
+        <% end %>
+    </div>
+
+    <div class="col-md-2">
+    </div>
+
+    <div class="col-md-3">
+    </div>
+</div>
+
+<div class="row top-buffer">
+    <div class="col-md-2 col-md-offset-1">
+        <a data-toggle="collapse" href="#domain-collapse"><b>Domains</b></a>
+    </div>
+</div>
+<div class="row top-buffer">
+    <div id="domain-collapse" class="col-md-10 col-md-offset-1 collapse">
+        <% if @protein.protein_has_domains.any? %>
+            <table id="domains" class="table table-striped table-bordered display">
+                <thead>
+                    <tr>
+                        <td>PFAM accession</td>
+                        <td>PFAM id</td>
+                        <td>Start</td>
+                        <td>End</td>
+                        <td>Length</td>
+                        <td>e-value</td>
+                        <td>Name</td>
+                        <td>PFAM</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% @protein.protein_has_domains.each do |dom| %>
+                        <tr>
+                            <td><%= dom.dom_in_prot.pfam_acc %></td>
+                            <td><%= dom.dom_in_prot.pfam_id %></td>
+                            <td><%= dom.start_position %></td>
+                            <td><%= dom.end_position %></td>
+                            <td><%= dom.end_position - dom.start_position %></td>
+                            <td><%= dom.evalue %></td>
+                            <td><%= dom.dom_in_prot.name %></td>
+                            <td><%= link_to "link", "http://pfam.xfam.org/family/#{dom.dom_in_prot.pfam_acc}",target: "_blank" %></td> 
+                        </tr>
+                    <% end %>
+                </body>
+            </table>
+        <% else %>
+            No domains present
+        <% end %>
+    </div>
+</div>
+
+<div class="row top-buffer">
+    <div class="col-md-2 col-md-offset-1">
+        <a data-toggle="collapse" href="#goterm-collapse"><b>GO Terms</b></a>
+    </div>
+</div>
+<div class="row top-buffer">
+
+    <div id="goterm-collapse" class="col-md-10 col-md-offset-1 panel-collapse collapse" >
+        <% if @protein.goterms.any? %>
+            <table id="domains" class="table table-striped table-bordered display" >
+                <thead>
+                    <tr>
+                        <td>GO term</td>
+                        <td>Function</td>
+                        <td>Link to Gene Ontology</td>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <% @protein.goterms.each do |goterm| %>
+                        <tr>
+                            <td><%= goterm.go_term %></td>
+                            <td><%= goterm.go_name%></td>
+                            <td><%= link_to "link", "http://amigo2.berkeleybop.org/amigo/term/GO:#{goterm.go_term}", target: "_blank" %></td>
+                        </tr>
+                    <% end %>
+                </body>
+            </table>
+        <% else %>
+            No GO terms present
+
+        <% end %>
+    </div>
+
+</div>
+
+
+<div class="row top-buffer">
+    <div class="col-md-10 col-md-offset-1">
+        <b>Sequence</b><br>
+        <textarea readonly class="form-control sequence" rows="10"><%= @protein.protein_sequence %></textarea>
+    </div>
+
+</div>
+<br>

@@ -1,0 +1,73 @@
+<% provide(:title, @taxon.taxon_name) %>
+<% content_for :head do %>
+<% end %>
+
+<%#<h1><%= @taxon.taxon_name %> <%#details</h1>%>
+<div class="row">
+    <div class="col-md-3 col-md-offset-1">
+        <%= link_to("< Page back", :back, data: {no_turbolink: true}) %>
+    </div>
+</div>
+
+<div class="row top-buffer">
+    <div class="col-md-2 col-md-offset-1">
+        <b>Species</b>
+    </div>
+    
+    <div class="col-md-3">
+        <%= @taxon.taxon_name %>
+    </div>
+    
+    <div class="col-md-2">
+        <b>NCBI taxonomy</b>
+    </div>
+    
+    <div class="col-md-3">
+        <% if @taxon.NCBIid %>
+            <%= link_to "Link", "http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=#{@taxon.NCBIid}&lvl=3&lin=f&keep=1&srchmode=1&unlock", target: "_blank", title: "More infos at NCBI Taxonomy" %><br><br>
+        <% else %>
+            No NCBT taxonomy id present
+        <% end %>
+    </div>
+</div>
+<div class="row top-buffer"> 
+    <div class="col-md-2 col-md-offset-1">
+        <b>Number of Proteins</b>
+    </div>
+    
+    <div class="col-md-3">
+        <%= @taxon.proteins.count%>
+    </div>
+</div>
+
+<div class="row top-buffer"> 
+    <div class="col-md-2 col-md-offset-1">
+        <b>Lineage</b>
+    </div>
+
+    <div class="col-md-8 ">
+        <%= @taxon.NCBIlineage %>
+    </div>
+</div>
+
+<div class="row double-top-buffer">
+    <div class="col-md-10 col-md-offset-1">
+        <table id="taxa-proteins" class="table table-striped table-bordered display" data-source="<%= taxon_url(format: "json") %>">
+            <thead>
+                <tr>
+                    <td>Protein ID</td>
+                    <td>Name</td>
+                    <td>Length</td>
+                </tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+

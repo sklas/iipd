@@ -1,0 +1,98 @@
+<% provide(:title, @protein.protein_accession) %>
+<%#<h1><%= @protein.protein_accession %><%#'s details</h1>%>
+
+<div class="row">
+<<<<<<< HEAD
+    <div class="col-md-3 col-md-offset-2">
+        <%= link_to("< Page back", :back, data: {no_turbolink: true}) %>
+    </div>
+</div>
+<div class="row top-buffer">
+    <div class="col-md-1 col-md-offset-2">
+=======
+    <div class="col-md-2 col-md-offset-1">
+>>>>>>> 6647129738d8127d4c2299027d362a0160c43a46
+        <b>Protein id</b>
+    </div>
+    
+    <div class="col-md-3">
+        <%= @protein.protein_accession %>
+    </div>
+    
+    <div class="col-md-2">
+        <b>Species</b>
+    </div>
+    
+    <div class="col-md-3">
+        <%= link_to @protein.taxon.taxon_name, taxon_path(@protein.taxon.id), data: {no_turbolink: true} %>
+    </div>
+</div>
+
+<div class="row top-buffer">
+    <div class="col-md-2 col-md-offset-1">
+        <b>Name</b>
+    </div>
+
+    <div class="col-md-3">
+        <%= @protein.name %>
+    </div>
+
+    <div class="col-md-2">
+            <b>Source</b>
+    </div>
+
+    <div class="col-md-3">
+        Source.....
+    </div>
+</div>
+
+<div class="row top-buffer">
+    <div class="col-md-2 col-md-offset-1">
+        <b>Family</b>
+    </div>
+
+    <div class="col-md-3">
+        Any family...
+    </div>
+
+    <div class="col-md-2">
+    </div>
+
+    <div class="col-md-3">
+    </div>
+</div>
+
+<div class="row top-buffer">
+    <div class="col-md-2 col-md-offset-1">
+        <b>Domains</b>
+    </div>
+</div>
+<div class="row top-buffer">
+
+    <div class="col-md-10 col-md-offset-1">
+        A table with domains; should be collapsable
+    </div>
+</div>
+
+<div class="row top-buffer">
+    <div class="col-md-2 col-md-offset-1">
+        <b>GO Terms</b>
+    </div>
+</div>
+<div class="row top-buffer">
+
+    <div class="col-md-10 col-md-offset-1">
+        A table with GO terms, also collapsable
+    </div>
+</div>
+
+
+<div class="row top-buffer">
+    <div class="col-md-10 col-md-offset-1">
+        <textarea readonly class="form-control sequence" rows="10"><%= @protein.protein_sequence %></textarea>
+    </div>
+
+</div>
+
+
+<br>

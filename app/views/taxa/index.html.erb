@@ -1,0 +1,17 @@
+<% provide(:title, 'Browse species') %>
+<%= content_for :head do %>
+<% end %>
+<h1>Browse species</h1>
+<table id="taxa" class="table table-striped table-bordered display" data-source="<%= taxa_url(format: "json") %>">
+    <thead>
+        <tr>
+            <td>Species</td>
+            <td>Number of Proteins</td>
+            <td>Link to NCBI Taxonomy</td>
+        </tr>
+    </thead>
+
+    <tbody>
+    </tbody>
+</table>
+

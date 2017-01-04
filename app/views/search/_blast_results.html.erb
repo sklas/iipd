@@ -1,0 +1,131 @@
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <a data-toggle="collapse" href="#query-collapse"><b>Query</b></a> 
+        <br>
+        <div id="query-collapse" class="collapse"> 
+            <textarea readonly class="form-control" rows="10"><%= params[:sequence] %></textarea>
+        </div>
+    </div>
+</div>
+
+<div class="row top-buffer">
+    <div class="col-md-2 col-md-offset-1">
+        Length: <%= params[:sequence].length %>
+    </div>
+    <div class="col-md-2">
+        E-value threshold: <%= params[:evalue] %>
+    </div>
+    <div class="col-md-2">
+        Download: <%= link_to "Link", @outfile, download: "IIPD_search_#{rand(999)}.blast" %>
+    </div>
+</div>
+
+<div class="row top-buffer">
+    <div class="col-md-8 col-md-offset-2">
+        <table id="blastresults" class="table table-striped table-bordered display"> 
+            <thead>
+                <tr>
+                    <td>Protein</td>
+                    <td>Species</td>
+                    <td>Length</td>
+                    <td>Score</td>
+                    <td>E-value</td>
+                    <td>Alignment</td>
+
+                </tr>
+            </thead>
+            <tbody>
+                <% @results.each do |name, hit| %>
+                    <% protein = Protein.find_by(protein_accession: name) %>
+                    <tr>
+                        <td title="Protein"><%= link_to name, protein%></td>
+                        <td title="Species"><%= link_to protein.taxon.taxon_name, protein.taxon %></td> 
+                        <td title="Length"><%= hit.length %></td>
+                        <td title="Score"><%= hit.score %></td>
+                        <td title="E-value"><%= hit.evalue %></td>
+                        <td title="Alignments"><%= link_to "Alignments", "##{name}" %></td>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+</div>
+    <% @results.each do |name, hit| %>
+        <% protein = Protein.find_by(protein_accession: name) %>
+        <div class="row top-buffer" id="<%= name %>" style="padding-top: 60px">
+            <div class="col-md-2 col-md-offset-1">
+                <b>Name</b> <%= link_to name, protein %>
+            </div>
+            <div class="col-md-3 ">
+                <b>Species</b> <%= link_to protein.taxon.taxon_name, protein.taxon %>
+            </div>
+            <div class="col-md-2">
+                <b>Length</b> <%= hit.length %>
+            </div>
+            <div class="col-md-2">
+                <b>Score</b> <%= hit.score %>
+            </div>
+            <div class="col-md-2">
+                <b>E-value</b> <%= hit.evalue %>
+            </div>
+        </div>
+        <div class="row top-buffer">
+            <div class="col-md-1 col-md-offset-2">
+                <b>Length</b>
+            </div>
+            <div class="col-md-1">
+                <b>Score</b>
+            </div>
+            <div class="col-md-1">
+                <b>E-value</b>
+            </div>
+            <div class="col-md-2">
+                <b>Identities</b>
+            </div>
+            <div class="col-md-1">
+                <b>Positives</b>
+            </div>
+            <div class="col-md-1">
+                <b>Gaps</b>
+            </div>
+        </div>
+        <% hit.alignments.each_with_index do |v, i| %>
+            <div class="row" style="padding-top:10px">
+                <div class="col-md-1 col-md-offset-2" title="Length">
+                    <%= v.length %>
+                </div>
+                <div class="col-md-1" title="Score">
+                    <%= v.score %>
+                </div>
+                <div class="col-md-1" title="E-value">
+                    <%= v.evalue %>
+                </div>
+                <div class="col-md-2" title="Identities">
+                    <%= "#{number_to_percentage(v.identities.to_f/v.length.to_i * 100, precision: 0)} (#{v.identities.to_i}/#{v.length.to_i})" %>
+                </div>
+                <div class="col-md-1" title="Positives">
+                    <%= "#{number_to_percentage(v.positives.to_f/v.length.to_i*100, precision: 0)} (#{v.positives.to_i}/#{v.length.to_i})" %>
+                </div>
+                <div class="col-md-1" title="Gaps">
+                    <%= "#{number_to_percentage(v.gaps.to_f/v.length.to_i*100, precision: 0)} (#{v.gaps.to_i}/#{v.length.to_i})" %>
+                </div>
+                <div class="col-md-1">
+                    <a data-toggle="collapse" href=".<%= "#{name}#{i}" %>-collapse">Alignment</a>
+                </div>
+            </div>
+            <div class"row">
+                <div class="col-md-8 col-md-offset-2 <%= "#{name}#{i}" %>-collapse collapse" >
+                    <% begin %>
+                        <pre>
+                            <% v.sequence.each do |line| %><%= line %><% end %>
+                        </pre>
+                    <% rescue %>
+                        No alignment present
+                    <% end %>
+                </div>
+            </div>
+        <% end %>
+        <div class="row"><div class="col-md-9 col-md-offset-1"><hr /></div></div>
+    <% end %>
+</div>
+

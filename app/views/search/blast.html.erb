@@ -1,0 +1,37 @@
+<h1>Blast against the IIPD</h1>
+<% flash.each do |key, value| %>
+    <div class="alert alert-<%= key %>">
+        <%= raw value.split(";").join("<br>") %>
+    </div>
+<% end %>
+
+<% unless @results %>
+    <div class="row">
+        <%= form_tag blast_path, :method => 'post' do %>
+            <div class="col-md-6 col-md-offset-1" >
+                <%= label_tag 'Sequence' %>
+                <%= text_area_tag :sequence, params[:sequence], class: "form-control", rows: 15%><br>
+            </div>
+            <div class="col-md-3">
+                <%= label_tag 'Evalue', "E-value (format like 0.001 or 1e-3)" %>
+                <%= text_field_tag :evalue, params[:evalue], value: "0.1", class: "form-control"%>
+                <br>
+                <b> Program</b>
+                <br>
+                <div class="radio">
+                    <%= radio_button_tag :program, "blastp", true %>
+                    <%= label_tag :program_blastp, "blastp: blast a protein query" %>
+                </div>
+                <div class="radio">
+                    <%= radio_button_tag :program, "blastx" %>
+                    <%= label_tag :program_blastx, "blastx: blast a nucleotide query" %>
+            </div>
+            <%= submit_tag "Blast", name: nil %>
+            </div>
+        </div>
+    </div>
+    <% end %>
+<% else %>
+    <%= render 'blast_results'%>
+<% end %>
+

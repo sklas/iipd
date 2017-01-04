@@ -1,0 +1,55 @@
+require 'capistrano/ext/multistage'
+set :stages, ["staging", "production"]
+set :default_stage, "staging"
+# include uberspacify base recipes
+# require 'uberspacify/base'
+
+# comment this if you don't use MySQL
+# require 'uberspacify/mysql' 
+
+# the Uberspace server you are on
+# server 'canis.uberspace.de', :web, :app, :db, :primary => true
+
+# your Uberspace username
+# set :user, 'sklas'
+
+# a name for your app, [a-z0-9] should be safe, will be used for your gemset,
+# databases, directories, etc.
+set :application, 'IIPD'
+
+# the repo where your code is hosted
+set :scm, :git
+set :repository, 'git@ebbgit.uni-muenster.de:62246/sklas/iipd.git'
+set :scm_passphrase, ""
+# set :repository, 'git@github.com:sklas/iipd.git'
+
+# optional stuff from here
+
+# By default, your app will be available in the root of your Uberspace. If you
+# have your own domain set up, you can configure it here
+# set :domain, 'www.dummyapp.com'
+
+# By default, uberspacify will generate a random port number for Passenger to
+# listen on. This is fine, since only Apache will use it. Your app will always
+# be available on port 80 and 443 from the outside. However, if you'd like to
+# set this yourself, go ahead.
+# set :passenger_port, 55555
+
+# By default, Ruby Enterprise Edition 1.8.7 is used for Uberspace. If you
+# prefer Ruby 1.9 or any other version, please refer to the RVM documentation
+# at https://rvm.io/integration/capistrano/ and set this variable.
+# set :rvm_ruby_string, '2.0.0@iipd'
+#
+set :user, 'www-data'
+
+
+desc "Fill the database. Usage \"cap filldb -s data_type=(one of: taxaproteins, sequence, domains, goterms) -s file=yourfile\""
+# run like: cap fill_db
+task :filldb do
+    #filltype = configuration.variables[:datatype]
+    #dbfile = configuration.variables[:file]
+    rake = fetch(:rake, 'rake')
+    rails_env = fetch(:rails_env, 'production')
+    run "cd '#{current_path}' && #{rake} data:#{data_type}[#{file}] RAILS_ENV=#{rails_env}"
+end
+        
